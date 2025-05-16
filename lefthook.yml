@@ -5,9 +5,6 @@ pre-commit:
   parallel: true
   commands:
     # common rules
-    secretlint:
-      glob: '*'
-      run: npx secretlint --maskSecrets --secretlintignore .gitignore {staged_files}
     formatting:
       glob: '**/*.{js,ts,jsx,tsx,md,mdx,json,yml}'
       run: npx prettier --write "{staged_files}"
