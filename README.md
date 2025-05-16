@@ -42,5 +42,5 @@ npx zenn new:book
 npm start
 ```
 
-### 参考にさせていただいたリポジトリ
+### Reference repositories
 https://github.com/jonghyo/zenn.dev
