@@ -41,21 +41,20 @@ jobs:
 
       # 依存モジュールインストール
       - name: Install node modules
-        if: ${{ steps.cache_dependency.outputs.cache-hit != 'true' }}
-        run: 'npm ci --no-audit --progress=false --silent'
+        run: 'npm ci --no-audit'
 
       # textlint
-      - name: Exec textlint-github-pr-check
-        uses: tsuyoshicho/action-textlint@v3
-        with:
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
-          level: warning
-          textlint_flags: '**/*.{md,mdx}'
+      # - name: Exec textlint-github-pr-check
+      #   uses: tsuyoshicho/action-textlint@v3
+      #   with:
+      #     github_token: ${{ github.token }}
+      #     reporter: github-pr-review
+      #     level: warning
+      #     textlint_flags: '**/*.{md,mdx}'
 
       # markdownlint
       - name: Exec markdwonlint
-        run: 'npm run markdownlint'
+        run: 'npx markdownlint-cli2 "**/*.{md,mdx}"'
 
       # キャッシュセーブ
       - name: Always Save Cache

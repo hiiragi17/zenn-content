@@ -30,6 +30,15 @@ npx zenn new:article --slug 記事のスラッグ --title タイトル --type te
 - `--type`: 記事のタイプ。 `tech` | `idea`
 - `--emoji`: アイキャッチ用の絵文字を1つ指定
 
+### commit format
+
+```
+<type>(<scope>): <subject>
+
+e.g. 以下のようなコミットメッセージを求めるようになります
+docs(zenn-github-repo): add articles
+```
+
 ### Add book
 
 ```bash

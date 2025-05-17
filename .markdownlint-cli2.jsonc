@@ -8,7 +8,8 @@
       "no-space-in-emphasis": false, // MD037  $$など数式で問題になったため外す
       "link-fragments": false, // MD051 相対パス設定
       "first-line-h1": false, //MD041 first-line-heading
-      "no-duplicate-heading": false //MD024 no-duplicate-heading
+      "no-duplicate-heading": false, //MD024 no-duplicate-heading
+      "single-title": false // MD025 H1の多用を許可
     },
     "ignores": [".git", "node_modules"] // 無視するディレクトリ
   }
