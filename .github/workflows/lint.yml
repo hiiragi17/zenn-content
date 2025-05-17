@@ -41,8 +41,7 @@ jobs:
 
       # 依存モジュールインストール
       - name: Install node modules
-        if: ${{ steps.cache-restore.outputs.cache-hit != 'true' }}
-        run: 'npm ci --no-audit --progress=false --silent'
+        run: 'npm ci --no-audit'
 
       # textlint
       # - name: Exec textlint-github-pr-check
@@ -55,7 +54,7 @@ jobs:
 
       # markdownlint
       - name: Exec markdwonlint
-        run: 'npm run markdownlint'
+        run: 'npx markdownlint-cli2 "**/*.{md,mdx}"'
 
       # キャッシュセーブ
       - name: Always Save Cache
