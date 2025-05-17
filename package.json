@@ -33,7 +33,7 @@
     "@secretlint/secretlint-rule-preset-recommend": "^9.3.2",
     "@textlint/config-loader": "^14.7.1",
     "lefthook": "^1.11.12",
-    "markdownlint-cli2": "^0.18.0",
+    "markdownlint-cli2": "^0.18.1",
     "prettier": "^3.5.3",
     "secretlint": "^9.3.2",
     "textlint": "^14.7.1",
