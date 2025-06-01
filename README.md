@@ -7,6 +7,7 @@ My zenn articles is here.
 ## Zenn latest posts
 
 <!-- BLOG-POST-LIST:START -->
+- [pyppeteerを使用してクローラーを作成した話。](https://zenn.dev/hiiragi/articles/crawler_create)
 - [今更人に聞けないPythonの基本の用語を、PHPと比較しながらまとめてみる。](https://zenn.dev/arsaga/articles/e4fe73447495c4)
 - [輪読会でのファシリテーターのススメ。](https://zenn.dev/arsaga/articles/605db9323f40cb)
 <!-- BLOG-POST-LIST:END -->
