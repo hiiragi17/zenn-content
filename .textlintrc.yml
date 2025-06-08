@@ -1,13 +1,14 @@
-{
-    "rules": {
-        "preset-ja-technical-writing": {
-            "sentence-length": false,
-            "ja-no-weak-phrase": false
-        },
-        "prh": {
-            "rulePaths": [
-                "node_modules/prh/prh-rules/media/WEB+DB_PRESS.yml"
-            ]
-        }
-    }
-}
+---
+filters:
+  comments: true
+rules:
+  preset-smarthr:
+    ja-no-mixed-period: false
+  preset-ja-technical-writing:
+    sentence-length: false
+    ja-no-mixed-period: false
+    max-kanji-continuous-len: false
+    no-exclamation-question-mark: false
+    max-comma: false
+    ja-no-successive-word: false
+  spellcheck-tech-word: true
