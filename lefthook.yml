@@ -6,13 +6,13 @@ pre-commit:
   commands:
     # common rules
     formatting:
-      glob: '**/*.{js,ts,jsx,tsx,md,mdx,json,yml}'
+      glob: '**/*.{js,ts,jsx,tsx,json,yml}'
       run: npx prettier --write "{staged_files}"
     # for docs edit rules
     # textlint is temporarily disabled
-    # textlint:
-    #   glob: '**/*.{md,mdx}'
-    #   run: npx textlint --cache {staged_files}
+    textlint:
+      glob: '**/*.{md,mdx}'
+      run: npx textlint --cache {staged_files}
     markdownlint:
       glob: '**/*.{md,mdx}'
       run: npx markdownlint-cli2 {staged_files}
