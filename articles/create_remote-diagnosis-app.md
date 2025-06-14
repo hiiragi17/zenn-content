@@ -255,17 +255,6 @@ TypeScriptで型推論が働く理由は、
 showMainTitle = true  // trueはboolean型なので、showMainTitleもboolean型と推論
 ```
 
-// 型推論の威力を示す例
-const reasons =[
-  "ペットの体調が心配",
-  "配達の受け取り",
-  "家族のお迎え"
-]; // string[]と推論される
-
-const getRandomReason = () => {
-  return reasons[Math.floor(Math.random() * reasons.length)];
-}; // () => stringと推論される
-
 TypeScriptの型推論を活用することで、コードがスッキリして可読性が向上する。
 今回はそんなにコードを記載していないので、あまりわからないが、
 コード量が増えてくると、そのあり難みを感じるに違いない。
