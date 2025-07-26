@@ -52,5 +52,15 @@ npx zenn new:book
 npm start
 ```
 
+### lint
+```bash
+npx markdownlint-cli2 articles/delete_setting_policy.md
+npx markdownlint-cli2 --fix articles/delete_setting_policy.md
+```
+```bash
+npx textlint articles/delete_setting_policy.md
+npx textlint -- fix articles/delete_setting_policy.md
+```
+
 ### Reference repositories
 https://github.com/jonghyo/zenn.dev
