@@ -7,9 +7,9 @@ My zenn articles is here.
 ## Zenn latest posts
 
 <!-- BLOG-POST-LIST:START -->
+- [React・Next.js・TypeScriptのキャッチアップのために、荒唐無稽なリモート理由を診断してくれるアプリを作成しました。](https://zenn.dev/hiiragi/articles/create_remote-diagnosis-app)
 - [pyppeteerを使用してクローラーを作成した話。](https://zenn.dev/hiiragi/articles/crawler_create)
 - [今更人に聞けないPythonの基本の用語を、PHPと比較しながらまとめてみる。](https://zenn.dev/arsaga/articles/e4fe73447495c4)
-- [輪読会でのファシリテーターのススメ。](https://zenn.dev/arsaga/articles/605db9323f40cb)
 <!-- BLOG-POST-LIST:END -->
 
 ## Local Development
@@ -50,6 +50,16 @@ npx zenn new:book
 
 ```bash
 npm start
+```
+
+### lint
+```bash
+npx markdownlint-cli2 articles/delete_setting_policy.md
+npx markdownlint-cli2 --fix articles/delete_setting_policy.md
+```
+```bash
+npx textlint articles/delete_setting_policy.md
+npx textlint -- fix articles/delete_setting_policy.md
 ```
 
 ### Reference repositories
