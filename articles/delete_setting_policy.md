@@ -8,12 +8,12 @@ published: false
 
 # 始めに
 
-とある案件でリファクタリングを行なっていたとき、
+とある案件でリファクタリングを行っていたとき、
 複雑な削除制限をLaravelのPolicyで統一しているのを見ました。
 以前Policyの記事を書いたのですが、
 その時は認可処理で使用していました。
 てっきりPolicyとはそれだけの機能しかないと思っていたのですが、
-使い方次第で色々できそうなことがわかりました。
+使い方次第でいろいろできそうなことがわかりました。
 今回はその使い方をまとめます。
 
 https://zenn.dev/arsaga/articles/b5a28d65075322
@@ -50,11 +50,10 @@ class Category extends Model
 ```
 
 商品カテゴリなので、
-商品との紐づきが勿論あり。
+商品との紐づきがもちろんあります。
 その後キャンペーンとかでもカテゴリが使用されるようになり、
-おすすめ商品設定でも使用されるようになり。
-検索フィルターでも使用されるようになりました。
-他にも色々と使用される可能性が今後もありますね。
+おすすめ商品設定や検索フィルターでも使用されるようになりました。
+他にもいろいろと使用される可能性が今後もありますね。
 当然ですが商品カテゴリを消す場合、
 これらと紐づきがないかを確認してから消すようにしないといけないですね。
 そうでないと存在しない商品カテゴリと紐づいてしまうことになって、
@@ -84,9 +83,9 @@ public function destroy(Category $category)
 ```
 
 そもそも上の、
-`$category->products()->exists()`でむっちゃ簡単に存在確認できるな、
+`$category->products()->exists()`で非常に簡単に存在確認できるな、
 Laravelはわかりやすいなあって今更感動したりしています。
-LaravelのEloquent ORMって非常に有難いですよね。
+LaravelのEloquent ORMって非常にありがたいですよね。
 リレーションを貼るだけで、
 
 ```php
@@ -112,7 +111,7 @@ $category->products()->exists()  // HasMany を返す
 FastAPIでSQLAlchemyを使用していたときは、
 明示的ではありますが冗長なコード書かないと、
 同じようなことができないですし。
-多分SQLAlchemyならこんな感じ。
+おそらくSQLAlchemyならこんな感じ。
 
 ```python
 has_products = session.query(exists().where(Product.category_id == category_id)).scalar()
@@ -128,7 +127,7 @@ https://readouble.com/laravel/8.x/ja/collections.html
 話がずれましたがコントローラーに全部集約するだけで、
 依存関係のあるテーブルが全部確認できて、
 1つでも存在するカテゴリがあれば削除ができなくなります。
-まあなんかこれでもいい気がするのですが、
+この方法でも十分機能しますが、
 ここではPolicyを使用して実装します。
 
 # Policy使用
@@ -147,10 +146,10 @@ public function destroy(Category $category)
 // Policy
 public function delete(User $user, Category $category)
 {
-    return !($category->products->count() ||
-            $category->campaigns->count() ||
-            $category->recommendations->count() ||
-            $category->searchFilters->count());
+    return !($category->products()->exists() ||
+             $category->campaigns()->exists() ||
+             $category->recommendations()->exists() ||
+             $category->searchFilters()->exists());
 }
 ```
 
@@ -206,6 +205,12 @@ public function delete(User $user, Category $category)
 設計によりコードを変更する場合の影響範囲が狭くなりますし、
 拡張性・再利用性も向上しますね。
 
+### 注意: Policy を認可以外にも使っている点について
+
+Laravelでは通常、Policyは「認可（Authorization）」のために用いますが、
+本記事では「削除してよい状態かどうか」というドメインロジックにも活用しています。
+純粋な認可と区別したい場合、別クラス（例: `CategoryDeletionRule`）に切り出すのも選択肢です。
+
 ## 3.テストもしやすい
 
 ```php
@@ -260,8 +265,10 @@ public function delete($categoryId)
 それをリファクタリングしようとなって、
 どのような設計にするか考えたときに、
 ServiceとRepositoryの設計の話も出たのですが。
-今回の設計だと過剰設計になって、
-あまり良くない設計なのでなしになりました。
+今回のように削除制限のロジックが単純で、再利用先も限られている場合は、
+わざわざRepositoryやServiceクラスを設けると、構成が冗長になりやすいです。
+このようなケースではPolicyを活用することで、
+よりシンプルかつ再利用性のある設計になります。
 
 # まとめ
 
@@ -271,7 +278,7 @@ Policyは認可処理だけでなく、
 Eloquent ORMが強いって話ですね。
 まあどちらにしろ、適切なアーキテクチャを選択して、
 保守性が高くて拡張しやすいコードを書けるようになっていきたいですね。
-それではここまで読んでいただきありがとうございました。
+それでは最後まで読んでいただきありがとうございました
 誰かの参考になれば幸いです。
 
 # 参考文献
