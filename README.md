@@ -7,9 +7,9 @@ My zenn articles is here.
 ## Zenn latest posts
 
 <!-- BLOG-POST-LIST:START -->
+- [複雑な削除制限をLaravelのPolicyで統一管理する。](https://zenn.dev/hiiragi/articles/delete_setting_policy)
 - [React・Next.js・TypeScriptのキャッチアップのために、荒唐無稽なリモート理由を診断してくれるアプリを作成しました。](https://zenn.dev/hiiragi/articles/create_remote-diagnosis-app)
 - [pyppeteerを使用してクローラーを作成した話。](https://zenn.dev/hiiragi/articles/crawler_create)
-- [今更人に聞けないPythonの基本の用語を、PHPと比較しながらまとめてみる。](https://zenn.dev/arsaga/articles/e4fe73447495c4)
 <!-- BLOG-POST-LIST:END -->
 
 ## Local Development
