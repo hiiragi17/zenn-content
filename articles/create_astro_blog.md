@@ -189,6 +189,10 @@ jobs:
 
 https://hiiragi17.github.io/daily-scraps/
 
+GitHubはこちら。
+
+https://github.com/hiiragi17/daily-scraps
+
 # 余談
 
 このブログを作るのに時間がかかってしまって、
