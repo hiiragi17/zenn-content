@@ -7,9 +7,9 @@ My zenn articles is here.
 ## Zenn latest posts
 
 <!-- BLOG-POST-LIST:START -->
+- [Findyさんの抽選に当たったので、「O'Reilly 学び放題プログラム」を体験してみた。](https://zenn.dev/hiiragi/articles/oreilly_online_learning)
 - [複雑な削除制限をLaravelのPolicyで統一管理する。](https://zenn.dev/hiiragi/articles/delete_setting_policy)
 - [React・Next.js・TypeScriptのキャッチアップのために、荒唐無稽なリモート理由を診断してくれるアプリを作成しました。](https://zenn.dev/hiiragi/articles/create_remote-diagnosis-app)
-- [pyppeteerを使用してクローラーを作成した話。](https://zenn.dev/hiiragi/articles/crawler_create)
 <!-- BLOG-POST-LIST:END -->
 
 ## Local Development
