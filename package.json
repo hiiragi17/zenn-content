@@ -25,7 +25,7 @@
   "homepage": "https://github.com/hiiragi17/zenn-content#readme",
   "dependencies": {
     "18": "^0.0.0",
-    "zenn-cli": "^0.4.3"
+    "zenn-cli": "^0.5.2"
   },
   "devDependencies": {
     "@textlint/config-loader": "12.6.1",

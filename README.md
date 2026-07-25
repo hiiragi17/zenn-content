@@ -7,9 +7,9 @@ My zenn articles is here.
 ## Zenn latest posts
 
 <!-- BLOG-POST-LIST:START -->
-- [Findyさんの抽選に当たったので、「O'Reilly 学び放題プログラム」を体験してみた。](https://zenn.dev/hiiragi/articles/oreilly_online_learning)
-- [複雑な削除制限をLaravelのPolicyで統一管理する。](https://zenn.dev/hiiragi/articles/delete_setting_policy)
-- [React・Next.js・TypeScriptのキャッチアップのために、荒唐無稽なリモート理由を診断してくれるアプリを作成しました。](https://zenn.dev/hiiragi/articles/create_remote-diagnosis-app)
+- [PC移行を楽にする！dotfilesで開発環境を管理しよう。](https://zenn.dev/hiiragi/articles/setup_dotfiles)
+- [自分ではコードを書かず、Claude Codeに初詣先を診断させるアプリを作成させた。](https://zenn.dev/hiiragi/articles/use_clude_code)
+- [ReactNativeでWebviewを導入する。](https://zenn.dev/hiiragi/articles/create_webview)
 <!-- BLOG-POST-LIST:END -->
 
 ## Local Development
