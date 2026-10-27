@@ -29,7 +29,7 @@
   "devDependencies": {
     "@textlint/config-loader": "12.6.1",
     "markdownlint-cli2": "0.8.1",
-    "textlint": "12.6.1",
+    "textlint": "15.8.0",
     "textlint-filter-rule-comments": "1.2.2",
     "textlint-plugin-mdx": "1.1.0",
     "textlint-rule-no-mix-dearu-desumasu": "6.0.4",
