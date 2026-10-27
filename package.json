@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@textlint/config-loader": "12.6.1",
-    "markdownlint-cli2": "0.8.1",
+    "markdownlint-cli2": "0.24.0",
     "textlint": "15.8.0",
     "textlint-filter-rule-comments": "1.2.2",
     "textlint-plugin-mdx": "1.1.0",
