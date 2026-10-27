@@ -27,7 +27,7 @@
     "zenn-cli": "^0.5.7"
   },
   "devDependencies": {
-    "@textlint/config-loader": "12.6.1",
+    "@textlint/config-loader": "15.8.0",
     "markdownlint-cli2": "0.24.0",
     "textlint": "15.8.0",
     "textlint-filter-rule-comments": "1.2.2",
