@@ -10,6 +10,7 @@
     "first-line-h1": false, //MD041 first-line-heading
     "no-duplicate-heading": false, //MD024 no-duplicate-heading
     "no-emphasis-as-heading": false, // MD036 太字の小見出しを許容
+    "ol-prefix": false, // MD029 見出しをはさんで続く番号付きリストの連番を許容
     "single-title": false // MD025 H1の多用を許可
   },
   "ignores": [".git", "node_modules"] // 無視するディレクトリ
