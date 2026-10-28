@@ -4,6 +4,7 @@ filters:
 rules:
   preset-smarthr:
     ja-no-mixed-period: false
+    sentence-length: false # 長文の指摘は筆者の文体なので無効
   preset-ja-technical-writing:
     sentence-length: false
     ja-no-mixed-period: false
@@ -11,3 +12,8 @@ rules:
     no-exclamation-question-mark: false
     max-comma: false
     ja-no-successive-word: false
+    # 語り口に関わる指摘は筆者の文体なので無効
+    ja-no-weak-phrase: false
+    no-doubled-joshi: false
+    max-ten: false
+    no-mix-dearu-desumasu: false

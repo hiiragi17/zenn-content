@@ -39,4 +39,5 @@ jobs:
       - name: Prettier
         run: npm run prettier
 
-      # textlint(文章校正)は記事の書き換えが必要な指摘が残っているため、現状は必須にしない
+      - name: Textlint
+        run: npm run lint:docs
