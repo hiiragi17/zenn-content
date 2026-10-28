@@ -13,7 +13,7 @@ React Nativeアプリ開発で「Webページを表示したい」と思った�
 
 ## WebViewとは？
 
-WebView とはスマホのネイティブアプリ（iOS/Android OS）独自の統一ブラウザで、Google Chrome や Safari などとは違う仕様で Web のデータを処理し、
+WebViewとはスマートフォンのネイティブアプリ（iOS/Android OS）独自の統一ブラウザで、Google ChromeやSafariなどとは違う仕様でWebのデータを処理し、
 ページを表示します。
 **「アプリの中にミニブラウザを埋め込む」** というイメージです。
 
@@ -29,7 +29,7 @@ https://github.com/react-native-webview/react-native-webview
 - 利用規約やプライバシーポリシーの表示
 - Webベースのグラフやチャートの埋め込み
 
-既存の Web ページを開く際に自社アプリから離れて Chrome や Safari（別のアプリ）を起動するよりも、
+既存のWebページを開く際に自社アプリから離れてChromeやSafari（別のアプリ）を起動するよりも、
 アプリ内ブラウザでそのまま同じアプリに滞在してもらうほうが滞在時間が伸び、
 購買行動につながりやすいというメリットがあります。
 ECサイトなどでよく使われています。
@@ -158,5 +158,4 @@ WebViewは「アプリの中の小さなブラウザ」として、
 
 - [react-native-webview公式ドキュメント](https://github.com/react-native-webview/react-native-webview)
 
-- [WebViewとは？メリットとブラウザアプリとの違いをわかりやすく解説
-](https://backapp.co.jp/blog/1505)
+- [WebViewとは？　メリットとブラウザアプリとの違いをわかりやすく解説](https://backapp.co.jp/blog/1505)

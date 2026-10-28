@@ -10,14 +10,14 @@ published: false
 
 現在個人開発で運用しているアプリに、
 「ReflectHub」という、
-KPTやYWT等のフレームワークを使って、
+KPTやYWTなどのフレームワークを使って、
 振り返りを行えるアプリがあります。
 
 https://reflecthub.vercel.app/
 
 このアプリは、
 私が振り返りをしているものの、
-一週間に一回は地味に忘れてしまうので、
+一週間に1回は地味に忘れてしまうので、
 通知機能が欲しいと考えていたところから作成されました。
 (↓よければ下記記事もご覧ください)
 
@@ -29,6 +29,7 @@ https://qiita.com/hiiragi_en17/items/fdc81f273f742e71ced1
 今回はその機能に関してどのように実装したか深掘りしたいと思います！
 
 # 使用技術
+
 | 役割 | 技術 |
 | --- | --- |
 | フロントエンド / API | Next.js (App Router) |
@@ -41,27 +42,27 @@ https://qiita.com/hiiragi_en17/items/fdc81f273f742e71ced1
 
 この通知は単体で成り立っているわけではなく、
 PWA (Progressive Web App) の仕組みの上に載っています。
-特に iPhone / iPad では「アプリをホーム画面に追加する」ことが
+特にiPhone / iPadでは「アプリをホーム画面に追加する」ことが
 通知を受け取る前提条件です。
 
 # 第 1 部: PWA とは何か
 
 **PWA (Progressive Web App)** は、
-ふつうの Web サイトに「アプリらしさ」を足す技術の総称です。
-App Store や Google Play を通さず、
-Web の URL からそのままホーム画面にインストールでき、
+ふつうのWebサイトに「アプリらしさ」を足す技術の総称です。
+App StoreやGoogle Playを通さず、
+WebのURLからそのままホーム画面にインストールでき、
 オフラインでも動き、通知も受け取れます。
 
-PWA を支えるのは主に次の 3 つです。
+PWAを支えるのは主に次の3つです。
 
 1. **Web App Manifest** — アプリの自己紹介ファイル
 2. **Service Worker** — 裏で常駐するスクリプト
-3. **HTTPS** — 必須の前提 (Service Worker は https でしか動かない)
+3. **HTTPS** — 必須の前提 (Service Workerはhttpsでしか動かない)
 
 ## ① Web App Manifest — アプリの「設定票」
 
 `public/manifest.json` が、
-OS に「このサイトをアプリとして扱うときの見た目・振る舞い」を伝えます。ReflectHub の内容から抜粋します。
+OSに「このサイトをアプリとして扱うときの見た目・振る舞い」を伝えます。ReflectHubの内容から抜粋します。
 
 ```json
 {
@@ -78,23 +79,23 @@ OS に「このサイトをアプリとして扱うときの見た目・振る�
 
 押さえておきたい項目:
 
-- **`display: "standalone"`** — これが「アプリらしさ」の核。ブラウザの UI (アドレスバー・タブ) を消して、独立したアプリウィンドウとして起動します。
-- **`icons` の `maskable`** — Android の丸型・角丸などデバイスごとのアイコン形状に切り抜かれても崩れない専用アイコン。ReflectHub は `icon-maskable-512.png` を別に用意しています。
-- **`shortcuts`** — アイコン長押しで出るクイックメニュー (「新しい振り返り」「ダッシュボード」)。ただし **iOS は `shortcuts` 非対応** で、Android / デスクトップ Chrome 向けの機能です。
+- **`display: "standalone"`** — これが「アプリらしさ」の核。ブラウザのUI (アドレスバー・タブ) を消して、独立したアプリ画面として起動します。
+- **`icons` の `maskable`** — Androidの丸型・角丸などデバイスごとのアイコン形状に切り抜かれても崩れない専用アイコン。ReflectHubは `icon-maskable-512.png` を別に用意しています。
+- **`shortcuts`** — アイコン長押しで出るクイックメニュー (「新しい振り返り」「ダッシュボード」)。ただし **iOS は `shortcuts` 非対応** で、Android / デスクトップChrome向けの機能です。
 
-この manifest は `src/app/layout.tsx` の `manifest: "/manifest.json"` で `<head>` に登録されます。
+このmanifestは `src/app/layout.tsx` の `manifest: "/manifest.json"` で `<head>` に登録されます。
 
 ## ② Service Worker — 裏で常駐する「受付係」
 
 Service Worker (`public/sw.js`) は、
 **ページを閉じていてもブラウザが管理する別スレッドで動く JavaScript** です。
 ネットワーク通信を横取りしたり、プッシュ通知を受け取ったりできる、
-PWA の心臓部です。
+PWAの心臓部です。
 
 ### そもそも Service Worker とは — W3C が定めた Web 標準
 
-Service Worker は、**W3C が策定した公式の Web 標準 API** です。
-だから Chrome・Safari・Firefox など各ブラウザが共通で実装しています。
+Service Workerは、**W3C が策定した公式の Web 標準 API** です。
+だからChrome・Safari・Firefoxなど各ブラウザが共通で実装しています。
 
 理解のうえで大事なのは、**「スクリプトの中身は自分で書くが、それを Worker として動かすのはブラウザ」** という点です。
 
@@ -120,20 +121,20 @@ Service Worker は、**W3C が策定した公式の Web 標準 API** です。
 | 他リクエストの傍受 | できない (自分が `fetch()` を呼ぶのは可) | **できる** (`fetch` イベントでページの通信を横取り) |
 | DOM 操作 | 不可 | 不可 |
 
-ReflectHub がオフライン対応と通知を両立できるのは、
-この「常駐性」と「通信横取り」という **Service Worker 固有の性質** のおかげです。Web Worker では実現できません。
- (ページが消えれば Worker も消えるため)
+ReflectHubがオフライン対応と通知を両立できるのは、
+この「常駐性」と「通信横取り」という **Service Worker 固有の性質** のおかげです。Web Workerでは実現できません。
+ (ページが消えればWorkerも消えるため)
 
 ### ライフサイクル: install → activate → 稼働
 
-SW には決まった一生があります。
-ReflectHub のコードで追ってみます。
+SWには決まった一生があります。
+ReflectHubのコードで追ってみます。
 
-**① install — 事前準備**: 
+**① install — 事前準備**:
 オフライン起動に最低限必要なファイルを先読みキャッシュします。
-`event.waitUntil()` は「この Promise が終わるまで install を完了扱いにするな」という指示で、
+`event.waitUntil()` は「このPromiseが終わるまでinstallを完了扱いにするな」という指示で、
 非同期処理は必ずこれで包みます。
- (SW はイベント処理が終わると眠らされるため)
+ (SWはイベント処理が終わると眠らされるため)
 
 ```js
 self.addEventListener('install', (event) => {
@@ -150,7 +151,7 @@ self.addEventListener('install', (event) => {
 この掃除ロジックで旧版が消えます。
 **バージョン文字列を上げるだけでキャッシュを一新できる**設計です。
 
-**③ 稼働**: 有効化された SW は普段眠っていて、
+**③ 稼働**: 有効化されたSWは普段眠っていて、
 `fetch` / `push` / `notificationclick`
  などのイベントが来たときだけ起こされて処理します。
 
@@ -168,21 +169,21 @@ self.addEventListener('install', (event) => {
 
 `sw.js` が `push` イベントで通知を表示し、
 `notificationclick` でアプリを開きます。
-詳細は第 3 部で扱いますが、**キャッシュも通知も 1 つの Service Worker が担っている**ことを覚えておいてください。
+詳細は第3部で扱いますが、**キャッシュも通知も 1 つの Service Worker が担っている**ことを覚えておいてください。
 
 登録は `src/lib/sw/register.ts` が担当し、次の配慮がされています。
 
-- **本番環境でのみ登録** (開発時は Next.js の HMR と競合し、キャッシュ由来の不可解な挙動を招くため)
+- **本番環境でのみ登録** (開発時はNext.jsのHMRと競合し、キャッシュ由来の不可解な挙動を招くため)
 - 新バージョンを検出したら `SKIP_WAITING` を送って自動更新
 
 ## ③ インストール導線 — ブラウザ差の吸収がいちばんの難所
 
-「インストールできますよ」とユーザーに促す UI は、
-PWA で最も厄介な部分です。**ブラウザによってやり方が全く違う**からです。ReflectHub は `src/hooks/useInstallPrompt.ts` で吸収しています。
+「インストールできますよ」とユーザーに促すUIは、
+PWAで最も厄介な部分です。**ブラウザによってやり方が全く違う**からです。ReflectHubは `src/hooks/useInstallPrompt.ts` で吸収しています。
 
 **Chrome / Edge (Chromium 系) の場合**
 
-ブラウザが `beforeinstallprompt` イベントを自動で発火します。ReflectHub はこれを `preventDefault()` で保持し、自前の「インストール」ボタンから任意のタイミングで起動します。
+ブラウザが `beforeinstallprompt` イベントを自動で発火します。ReflectHubはこれを `preventDefault()` で保持し、自前の「インストール」ボタンから任意のタイミングで起動します。
 
 ```ts
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -192,27 +193,27 @@ window.addEventListener('beforeinstallprompt', (e) => {
 // ユーザーがボタンを押したら → deferredPrompt.prompt()
 ```
 
-**iOS / iPadOS の場合** (Safari に限らず iOS 上の全ブラウザ = WebKit)
+**iOS / iPadOS の場合** (Safariに限らずiOS上の全ブラウザ = WebKit)
 
-`beforeinstallprompt` が**そもそも来ません**。iOS は JS からインストールを起動できず、ユーザーが手動で「共有ボタン → ホーム画面に追加」する必要があります。そこで `src/components/common/InstallPrompt.tsx` は、iOS を検出したら**手順を絵つきで案内する UI** に切り替えます。
+`beforeinstallprompt` が**そもそも来ません**。iOSはJSからインストールを起動できず、ユーザーが手動で「共有ボタン → ホーム画面に追加」する必要があります。そこで `src/components/common/InstallPrompt.tsx` は、iOSを検出したら**手順を絵つきで案内する UI** に切り替えます。
 
-iOS 判定 (`src/lib/pwa/standalone.ts`) には一工夫あり、iPadOS 13+ は UA が "Macintosh" を名乗るため、`maxTouchPoints > 1` (タッチ対応か) を併用して見分けています。
+iOS判定 (`src/lib/pwa/standalone.ts`) には一工夫あり、iPadOS 13+ はUAが "Macintosh" を名乗るため、`maxTouchPoints > 1` (タッチ対応か) を併用して見分けています。
 
 **共通の配慮**
 
-- 一度「あとで」を押されたら **14 日間のクールダウン** (localStorage 記録) で再表示を抑制。しつこくしない。
-- すでに standalone 起動済み (インストール済み) なら UI を一切出さない。
+- 一度「あとで」を押されたら **14 日間のクールダウン** (localStorage記録) で再表示を抑制。しつこくしない。
+- すでにstandalone起動済み (インストール済み) ならUIを一切出さない。
 
 ## 理由 2: iOS では PWA インストールが通知の「必須条件」
 
 これは実装でハマりやすい重要ポイントです。
-**iOS (iPhone / iPad) では、ホーム画面に追加した PWA でしか Web Push を受け取れません** (iOS 16.4 以降)。
-Safari のタブで開いているだけでは、
+**iOS (iPhone / iPad) では、ホーム画面に追加した PWA でしか Web Push を受け取れません** (iOS 16.4以降)。
+Safariのタブで開いているだけでは、
 どれだけ設定しても通知は一切来ません。
 
-この制約が UI 設計に直接表れています。
-通知設定画面 は、未インストールのユーザーに対し、
-OS によって案内の温度感を変えます。
+この制約がUI設計に直接表れています。
+通知設定画面は、未インストールのユーザーに対し、
+OSによって案内の温度感を変えます。
 
 ```tsx
 {isIOS ? (
@@ -224,43 +225,43 @@ OS によって案内の温度感を変えます。
 )}
 ```
 
-コード側の意図も明快です。`src/lib/pwa/standalone.ts` の冒頭コメントは、PWA 判定関数が**通知のために存在する**ことを明言しています。
+コード側の意図も明快です。`src/lib/pwa/standalone.ts` の冒頭コメントは、PWA判定関数が**通知のために存在する**ことを明言しています。
 
-Web Push は Service Worker を必要とし、
-特に iOS/iPadOS では「ホーム画面に追加した PWA (standalone)」
+Web PushはService Workerを必要とし、
+特にiOS/iPadOSでは「ホーム画面に追加したPWA (standalone)」
 でのみ通知を受け取れる。
-通知設定 UI やインストール促し UI で、
+通知設定UIやインストール促しUIで、
 この状態に応じた案内を出すために使う。
 
-**まとめると**: PWA 化は、iOS で通知を動かすための前提条件です。
-だから ReflectHub は「まずインストールを促し、
+**まとめると**: PWA化は、iOSで通知を動かすための前提条件です。
+だからReflectHubは「まずインストールを促し、
 その上で通知を設定させる」導線になっています。
-この土台を理解した上で、いよいよ通知の中身に進みます。
+この土台を理解したうえで、いよいよ通知の中身に進みます。
 
 # 第 3 部: 通知が届く仕組み
 
 ## 大前提: Web Push の登場人物は「4 者」いる
 
-Web Push というと「サーバーがブラウザに直接通知を送る」
+Web Pushというと「サーバーがブラウザに直接通知を送る」
 イメージを持ちがちですが、実際には **4 者** が関わります。
 
-```
+```text
 [アプリのサーバー] → [Push サービス] → [ブラウザ/OS] → [Service Worker] → 通知表示
 ```
 
-1. **アプリのサーバー** (ReflectHub の Next.js API): 通知を「送りたい」側
-2. **Push サービス**: Google (FCM)・Apple・Mozilla などブラウザベンダーが運営する中継サーバー。アプリはここに HTTP リクエストを送るだけ
-3. **ブラウザ / OS**: Push サービスと常時つながっていて、メッセージが来たら Service Worker を起こす
-4. **Service Worker**: 第 1 部で登場した、
+1. **アプリのサーバー** (ReflectHubのNext.js API): 通知を「送りたい」側
+2. **Push サービス**: Google (FCM)・Apple・Mozillaなどブラウザベンダーが運営する中継サーバー。アプリはここにHTTPリクエストを送るだけ
+3. **ブラウザ / OS**: Pushサービスと常時つながっていて、メッセージが来たらService Workerを起こす
+4. **Service Worker**: 第1部で登場した、
 ページを閉じても動くスクリプト。受け取ったメッセージを通知として表示する
 
 アプリのサーバーは端末に直接触れません。
-「この端末に届けてください」という宛先 (**エンドポイント URL**) を Push サービスからもらい、そこへ送るのがポイントです。
+「この端末に届けてください」という宛先 (**エンドポイント URL**) をPushサービスからもらい、そこへ送るのがポイントです。
 
 ## 全体の流れ
 
 通知機能は大きく **「① 購読 (受け取る準備)」** と
- **「② 配信 (実際に送る)」** の 2 フェーズに分かれます。
+ **「② 配信 (実際に送る)」** の2フェーズにわかれます。
 
 ```mermaid
 sequenceDiagram
@@ -296,7 +297,7 @@ sequenceDiagram
 - **通知する曜日** (OFF / 日〜土)
 - **通知する時刻** (0:00〜23:00、日本時間)
 
-を選びます。「保存」を押すと、OFF 以外なら次のステップに進みます。
+を選びます。「保存」を押すと、OFF以外なら次のステップに進みます。
 
 ![設定画面](/images/notification/setting.jpg)
 
@@ -314,10 +315,10 @@ const result = await Notification.requestPermission(); // 'granted' なら OK
 
 ### 3. Service Worker を登録し、Push サービスを「購読」する
 
-許可が取れたら `/sw.js` を Service Worker として登録し、
+許可が取れたら `/sw.js` をService Workerとして登録し、
 **Push サービスへの購読** を行います。
-第 2 部で触れたとおり、
-通知はここで PWA の Service Worker を使います。
+第2部で触れたとおり、
+通知はここでPWAのService Workerを使います。
 
 ```ts
 const registration = await navigator.serviceWorker.register('/sw.js');
@@ -330,13 +331,13 @@ const subscription = await registration.pushManager.subscribe({
 });
 ```
 
-`subscribe()` を呼ぶと、ブラウザが裏で Push サービスと通信し、**PushSubscription** が返ってきます。どの Push サービスになるかはブラウザ依存で、`endpoint` の URL に表れます。
+`subscribe()` を呼ぶと、ブラウザが裏でPushサービスと通信し、**PushSubscription** が返ってきます。どのPushサービスになるかはブラウザ依存で、`endpoint` のURLに表れます。
 
 - Chrome / Edge → FCM: `https://fcm.googleapis.com/fcm/send/...`
-- Safari (Apple) → APNs ベース: `https://web.push.apple.com/...`
+- Safari (Apple) → APNsベース: `https://web.push.apple.com/...`
 - Firefox → Mozilla autopush: `https://updates.push.services.mozilla.com/...`
 
-返ってくる中身は 3 つ。
+返ってくる中身は3つ。
 
 | フィールド | 意味 |
 | --- | --- |
@@ -349,7 +350,7 @@ const subscription = await registration.pushManager.subscribe({
 ### 4. サーバーに購読情報を保存する
 
 取得した購読情報を `POST /api/push/subscribe` に送り、
-Supabase の `push_subscriptions` テーブルに upsert します。
+Supabaseの `push_subscriptions` テーブルにupsertします。
 
 ```sql
 CREATE TABLE push_subscriptions (
@@ -365,8 +366,8 @@ CREATE TABLE push_subscriptions (
 ```
 
 - **RLS (Row Level Security)** で「自分の行しか読み書きできない」ように保護
-- `(user_id, endpoint)` のユニーク制約 + upsert により、同じ端末で何度 ON にしても行は 1 つ
-- upsert のたびにトリガーで `updated_at` が更新される → 後述の「最後に ON にした端末に送る」判定に使う
+- `(user_id, endpoint)` のユニーク制約 + upsertにより、同じ端末で何度ONにしても行は1つ
+- upsertのたびにトリガーで `updated_at` が更新される → 後述の「最後にONにした端末に送る」判定に使う
 
 曜日・時刻の設定自体は `user_preferences.notification_preferences` (JSONB) に保存されます。
 
@@ -376,11 +377,11 @@ CREATE TABLE push_subscriptions (
 
 ### 保存順序のこだわり (DB と購読状態をずらさない)
 
-ブラウザの購読操作と DB 更新はアトミックにできないため、
+ブラウザの購読操作とDB更新はアトミックにできないため、
 失敗時に「誤配信」が起きない順序にしています。
 
-- **ON にするとき**: 先に購読を確立 → 成功したら DB に曜日を保存 (購読が無いのに ON が保存される事故を防ぐ)
-- **OFF にするとき**: 先に DB を OFF に → その後ブラウザの購読を解除 (解除に失敗しても DB が OFF なので配信されない)
+- **ON にするとき**: 先に購読を確立 → 成功したらDBに曜日を保存 (購読がないのにONが保存される事故を防ぐ)
+- **OFF にするとき**: 先にDBをOFFに → その後ブラウザの購読を解除 (解除に失敗してもDBがOFFなので配信されない)
 
 ## ② 配信フェーズ: 「毎時 0 分に動くリマインダー」
 
@@ -407,39 +408,39 @@ select cron.schedule(
 
 ポイント:
 
-- **なぜ Vercel Cron ではなく pg_cron?** — 理由は 2 つあり、
-どちらも Vercel の **Hobby (無料) プラン** の制約です。
-  - **① 無料プランでは毎時実行がそもそも不可能** — Hobby プランの Cron は 1 日 1 回まで。`0 * * * *` (毎時) のような定義はデプロイ時にエラーになります。ユーザーごとに配信時刻が違う ReflectHub は毎時起動が前提なので、この時点で Hobby では要件を満たせません。
-  - **② 実行時刻もブレる** — Hobby プランは負荷分散のため、指定した時間内の任意のタイミングで起動します (`0 8 * * *` なら 08:00:00〜08:59:59 のどこか)。そのため「11 時ちょうど」を狙っても中途半端な時刻に通知が来ます。(Pro 以上のプランなら指定した分の中で起動するため、分単位では正確です。)
-  - pg_cron は Postgres 内部のワーカーが毎分スケジュールを評価するので、**指定した分ちょうど** に、毎時でも動きます。
-  Supabase の無料プランで使えて追加コストはゼロ。
-- **pg_net** で DB から外部 HTTP (自アプリの API) を叩く
-- URL とシークレットは **Supabase Vault** に暗号化保存し、SQL に平文で書かない
-- タイムアウトはデフォルト 2 秒 → コールドスタート対策で 30 秒に延長
-- ユーザーごとに配信時刻が違うので **毎時** 起動し、「誰に送るか」の判定はアプリ側が行う。対象 0 件の時間帯は即終了するだけ
+- **なぜ Vercel Cron ではなく pg_cron?** — 理由は2つあり、
+どちらもVercelの **Hobby (無料) プラン** の制約です。
+  - **① 無料プランでは毎時実行がそもそも不可能** — HobbyプランのCronは1日1回まで。`0 * * * *` (毎時) のような定義はデプロイ時にエラーになります。ユーザーごとに配信時刻が違うReflectHubは毎時起動が前提なので、この時点でHobbyでは要件を満たせません。
+  - **② 実行時刻もブレる** — Hobbyプランは負荷分散のため、指定した時間内の任意のタイミングで起動します (`0 8 * * *` なら08:00:00〜08:59:59のどこか)。そのため「11時ちょうど」を狙っても中途半端な時刻に通知が来ます。(Pro以上のプランなら指定した分のなかで起動するため、分単位では正確です。)
+  - pg_cronはPostgres内部のワーカーが毎分スケジュールを評価するので、**指定した分ちょうど** に、毎時でも動きます。
+  Supabaseの無料プランで使えて追加コストはゼロ。
+- **pg_net** でDBから外部HTTP (自アプリのAPI) を叩く
+- URLとシークレットは **Supabase Vault** に暗号化保存し、SQLに平文で書かない
+- タイムアウトはデフォルト2秒 → コールドスタート対策で30秒に延長
+- ユーザーごとに配信時刻が違うので **毎時** 起動し、「誰に送るか」の判定はアプリ側が行う。対象0件の時間帯は即終了するだけ
 
 ### 6. API が cron 認証と配信対象の絞り込みを行う
 
-`GET /api/cron/daily-reminder` はまず 
+`GET /api/cron/daily-reminder` はまず
 `Authorization: Bearer ${CRON_SECRET}` を検証します。
 誰でも叩けると通知を乱発できてしまうためです。
 
 次に `getReminderTargets()`が配信対象を決めます。
 
 1. **JST での「今」の曜日と時刻** を `Intl.DateTimeFormat` で計算 (サーバーのタイムゾーンに依存しない)
-2. DB クエリで `reminder_weekday` = 今の曜日、かつ `reminder_hour` = 今の時刻のユーザーを抽出 (JSONB の `->>` 演算子で絞り込み)
-3. **同日中に通知済みのユーザーはスキップ** — `last_notified_at` が JST で今日ならスキップ (二重通知防止)
+2. DBクエリで `reminder_weekday` = 今の曜日、かつ `reminder_hour` = 今の時刻のユーザーを抽出 (JSONBの `->>` 演算子で絞り込み)
+3. **同日中に通知済みのユーザーはスキップ** — `last_notified_at` がJSTで今日ならスキップ (二重通知防止)
 4. 該当ユーザーの有効な (`is_active = true`) 購読を取得し、**`updated_at` の新しい順** に並べる
 
 ### 7. 「最後に ON にした端末」1 台だけに送る
 
-1 人が PC・スマホなど複数端末で購読していることがありますが、
+1人がパソコン・スマートフォンなど複数端末で購読していることがありますが、
 全端末に送ると冗長です。そこで `sendPushToFirstAvailable()` は次のように動きます。
 
 - **`updated_at` が最新の端末 (= 最後に通知を ON にした端末) から順に 1 件ずつ試す**
-- 1 件成功したらそこで終了 (通知は 1 台にだけ届く)
+- 1件成功したらそこで終了 (通知は1台にだけ届く)
 - 先頭の購読が **失効 (HTTP 404/410)** していた場合のみ、次に新しい端末へフォールバック
-- ネットワークエラーや 500 など「失効以外の失敗」なら打ち切り (他端末でも失敗する見込みが高いため)
+- ネットワークエラーや500など「失効以外の失敗」なら打ち切り (他端末でも失敗する見込みが高いため)
 
 ### 8. web-push ライブラリが暗号化して Push サービスへ送信する
 
@@ -447,10 +448,10 @@ select cron.schedule(
 裏では次のことが起きています。
 
 1. ペイロード (JSON) を購読時の `p256dh` / `auth` 鍵で
- **暗号化** (RFC 8291) — Push サービスにも中身は読めない
-2. **VAPID 秘密鍵で署名した JWT** をヘッダに付与 (RFC 8292) 
-— 「この通知は正規の ReflectHub サーバーからです」という証明
-3. 購読の `endpoint` URL へ HTTP POST → Push サービスが端末へ配送
+ **暗号化** (RFC 8291) — Pushサービスにも中身は読めない
+2. **VAPID 秘密鍵で署名した JWT** をヘッダーに付与 (RFC 8292)
+—「この通知は正規のReflectHubサーバーからです」という証明
+3. 購読の `endpoint` URLへHTTP POST → Pushサービスが端末へ配送
 
 送るペイロードはこれだけです。
 
@@ -467,18 +468,18 @@ select cron.schedule(
 
 VAPID (Voluntary Application Server Identification) は、**「どのサーバーが通知を送っているか」を Push サービスに証明する公開鍵ペア** です。
 
-- **公開鍵**: ブラウザに渡して購読時に登録。「この鍵の持ち主だけが私に通知を送れる」と紐付く
-- **秘密鍵**: サーバーだけが保持。送信時の JWT 署名に使う
+- **公開鍵**: ブラウザに渡して購読時に登録。「この鍵の持ち主だけが私に通知を送れる」と紐づく
+- **秘密鍵**: サーバーだけが保持。送信時のJWT署名に使う
 
-鍵が一致しない送信は Push サービスに拒否されるので、
-endpoint URL が漏れても第三者は通知を送れません。
+鍵が一致しない送信はPushサービスに拒否されるので、
+endpoint URLが漏れても第三者は通知を送れません。
 
 ### 9. Service Worker が通知を表示する
 
-Push サービスからメッセージが届くと、
-**アプリを開いていなくても** ブラウザが Service Worker を起こし、`push` イベントが発火します (`public/sw.js`)。
-ここで、第 1 部でオフラインキャッシュを担っていたのと同じ 
-Service Worker が、今度は通知の表示を担当します。
+Pushサービスからメッセージが届くと、
+**アプリを開いていなくても** ブラウザがService Workerを起こし、`push` イベントが発火します (`public/sw.js`)。
+ここで、第1部でオフラインキャッシュを担っていたのと同じ
+Service Workerが、今度は通知の表示を担当します。
 
 ```js
 self.addEventListener('push', (event) => {
@@ -503,9 +504,9 @@ self.addEventListener('push', (event) => {
 });
 ```
 
-上記のとおり `event.data` の null ガードは実コードにも入っています。
+上記のとおり `event.data` のnullガードは実コードにも入っています。
 
-通知をタップすると `notificationclick` イベントで対象 
+通知をタップすると `notificationclick` イベントで対象
 URL (`/reflection`) を開きます。
 すでにそのページのタブが開いていれば **フォーカス** し、
 なければ新しく開きます。
@@ -521,43 +522,43 @@ self.addEventListener('notificationclick', (event) => {
 
 ### 10. 後片付け: 失効処理と重複防止
 
-配信後、cron エンドポイントは以下を行います。
+配信後、cronエンドポイントは以下を行います。
 
 - **失効した購読 (404/410) を `is_active = false` に更新** — アンインストールや購読期限切れの端末には二度と送らない
-  - 注意: **401 は失効扱いにしない**。401 はサーバー側の VAPID 設定ミスの可能性が高く、失効扱いにすると鍵ミス 1 つで全ユーザーの購読が無効化されてしまうため (RFC 8030 では 404/410 のみが購読失効を意味する)
+  - 注意: **401 は失効扱いにしない**。401はサーバー側のVAPID設定ミスの可能性が高く、失効扱いにすると鍵ミス1つで全ユーザーの購読が無効化されてしまうため (RFC 8030では404/410のみが購読失効を意味する)
 - **配信成功したユーザーの `last_notified_at` を更新** — 同日中の再通知を防ぐ
-- 対象がいたのに **1 件も成功しなかった場合は HTTP 500 を返す** — VAPID 設定ミスなどのシステム障害を監視で検知できるようにする
+- 対象がいたのに **1 件も成功しなかった場合は HTTP 500 を返す** — VAPID設定ミスなどのシステム障害を監視で検知できるようにする
 
 ## まとめ: PWA から通知まで一気通貫
 
-PWA と通知は、Service Worker という共通の土台でつながっています。
+PWAと通知は、Service Workerという共通の土台でつながっています。
 全体を振り返ると次のとおりです。
 
 **PWA が土台を用意する (第 1〜2 部)**
 
-1. Manifest でアプリの見た目・起動方法を定義
-2. Service Worker を登録 (オフラインキャッシュ + 通知受信を兼ねる)
-3. ブラウザ差を吸収してインストールを促す (iOS は手動案内)
-4. iOS では PWA インストールが通知の必須条件
+1. Manifestでアプリの見た目・起動方法を定義
+2. Service Workerを登録 (オフラインキャッシュ + 通知受信を兼ねる)
+3. ブラウザ差を吸収してインストールを促す (iOSは手動案内)
+4. iOSではPWAインストールが通知の必須条件
 
 **その上で通知が動く (第 3 部)**
 
 5. ユーザーが曜日・時刻を選び、通知許可を取得
-6. Service Worker 登録 + Push サービスを購読 (endpoint と暗号鍵を取得)
-7. 購読情報を Supabase に保存
-8. pg_cron が毎時 0 分に配信 API を起動
-9. 「JST の今の曜日・時刻」に一致するユーザーを抽出 (通知済みはスキップ)
-10. 最後に ON にした端末 1 台へ、web-push が暗号化 + VAPID 署名して送信
-11. Service Worker が通知を表示、タップで `/reflection` へ
+6. Service Worker登録 + Pushサービスを購読 (endpointと暗号鍵を取得)
+7. 購読情報をSupabaseに保存
+8. pg_cronが毎時0分に配信APIを起動
+9. 「JSTの今の曜日・時刻」に一致するユーザーを抽出 (通知済みはスキップ)
+10. 最後にONにした端末1台へ、web-pushが暗号化 + VAPID署名して送信
+11. Service Workerが通知を表示、タップで `/reflection` へ
 12. 失効購読の無効化と `last_notified_at` 更新で後片付け
 
 # 最後に
 
 ようやく通知機能をつけられたことで、
-このアプリでの振り返りを着実に行なっていけそうで
+このアプリでの振り返りを着実に行っていけそうで
 よかったと思っています！
 もし振り返りに興味があれば、
-是非アプリを使ってみてください。
+ぜひアプリを使ってみてください。
 今振り返りフレームワークはこれだけ用意しているので、
 自分に合うフレームワークを使って、
 振り返りを手軽に始められるのではないかと思います！
