@@ -7,7 +7,7 @@ published: false
 ---
 # 始めに
 
-皆さまは日々の小さなアウトプットをどのように行なっていますか。
+皆さまは日々の小さなアウトプットをどのように行っていますか。
 毎日ちゃんとブログ記事を書いたりしていますか？
 もしくはTwitter(現X)に書いたりしていますか？
 Times文化があればそこに書いたりしていますか？
@@ -131,7 +131,7 @@ const posts = await getCollection('blog');
 
 ## GitHub Actionsでの自動デプロイ
 
-下記のようにGitHub Actionsで自動デプロイを行なえるようにしています。
+下記のようにGitHub Actionsで自動デプロイを行えるようにしています。
 
 ```YAML:deploy.yml
 # name: ワークフローの名前（GitHub のActionsタブで表示される）

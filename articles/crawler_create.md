@@ -32,7 +32,7 @@ https://www.akamai.com/ja/glossary/what-is-a-web-crawler
 
 参照： https://qiita.com/Chanmoro/items/db51658b073acddea4ac
 
-Beautiful Soupは前述の通りHTMLコンテンツなら、特に問題なくパース処理を行えます。しかしJavaScript等で作成された、動的なコンテンツの場合、これだけではうまくいきません。最後に表示されるHTMLとダウンロードされるHTMLが別物になってしまうからです。最初このことになかなか気が付かなかったのですが、下記のようにHTML構造をログに出力させて、ようやく分かりました。
+Beautiful Soupは前述の通りHTMLコンテンツなら、特に問題なくパース処理を行えます。しかしJavaScript等で作成された、動的なコンテンツの場合、これだけではうまくいきません。最後に表示されるHTMLとダウンロードされるHTMLが別物になってしまうからです。最初このことになかなか気が付かなかったのですが、下記のようにHTML構造をログに出力させて、ようやくわかりました。
 
 ```python
 # ページ全体のHTML構造をログに出力
@@ -51,7 +51,7 @@ https://qiita.com/tomomi-kawashita/items/1a1e03d5ee590823b92e
 ただ設定するためにDockerコンテナに、
 
 - Chrome (またはChromium) ブラウザ
-- ChromeDriverなどのコンポーネントが必要であり、少し大変そうだなと思い、他に方法がないか検索してrequests-html ライブラリというのを見つけました。
+- ChromeDriverなどのコンポーネントが必要であり、少し大変そうだなと思い、他に方法がないか検索してrequests-htmlライブラリというのを見つけました。
 
 > requests-htmlは以下のように、requestやBeautifulSoup(bs4)に依存したライブラリです。つまり、内部でこれらのライブラリを利用しています。なかでもpyppeteerにより「インターフェースなしのブラウザ（ヘッドレス）」を使うことでブラウザの表示内容を取得できます。
 
@@ -65,7 +65,7 @@ https://absg.hatenablog.com/entry/2020/10/20/201926
 
 ## pyppeteerを使用したところ上手くいった！
 
-そこで既にrequests-htmlに使用されていた、pyppeteerに着目しました。
+そこですでにrequests-htmlに使用されていた、pyppeteerに着目しました。
 
 > Puppeteer は Chromium をヘッドレスモードでプログラムが操作することを目的としたパッケージで、pyppeteer とは、 puppeteer (パッペッティア: 人形遣い) と呼ばれるGoogle製のJavaScriptのパッケージを、Pythonに移植したものです。
 
@@ -138,7 +138,7 @@ https://engineering.nifty.co.jp/blog/26586
 
 # まとめ
 
-クローラーを初めて実装したため、色々躓くところはあったのですが、知らなかったことを色々知れたため、自分の備忘録としてまとめておきました。誰かの参考になれば幸いです。
+クローラーをはじめて実装したため、色々躓くところはあったのですが、知らなかったことを色々知れたため、自分の備忘録としてまとめておきました。誰かの参考になれば幸いです。
 
 # 参考文献
 

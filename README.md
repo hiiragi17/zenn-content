@@ -7,9 +7,11 @@ My zenn articles is here.
 ## Zenn latest posts
 
 <!-- BLOG-POST-LIST:START -->
+
 - [PC移行を楽にする！dotfilesで開発環境を管理しよう。](https://zenn.dev/hiiragi/articles/setup_dotfiles)
 - [自分ではコードを書かず、Claude Codeに初詣先を診断させるアプリを作成させた。](https://zenn.dev/hiiragi/articles/use_clude_code)
 - [ReactNativeでWebviewを導入する。](https://zenn.dev/hiiragi/articles/create_webview)
+
 <!-- BLOG-POST-LIST:END -->
 
 ## Local Development
@@ -33,7 +35,7 @@ npx zenn new:article --slug 記事のスラッグ --title タイトル --type te
 
 ### commit format
 
-```
+```text
 <type>(<scope>): <subject>
 
 e.g. 以下のようなコミットメッセージを求めるようになります
@@ -53,14 +55,17 @@ npm start
 ```
 
 ### lint
+
 ```bash
 npx markdownlint-cli2 articles/delete_setting_policy.md
 npx markdownlint-cli2 --fix articles/delete_setting_policy.md
 ```
+
 ```bash
 npx textlint articles/delete_setting_policy.md
 npx textlint -- fix articles/delete_setting_policy.md
 ```
 
 ### Reference repositories
+
 https://github.com/jonghyo/zenn.dev

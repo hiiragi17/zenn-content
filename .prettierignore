@@ -1,3 +1,5 @@
 node_modules
 package-lock.json
 .vscode
+# Zenn 独自記法(:::message など)を壊すため記事は整形対象外
+articles/
