@@ -27,7 +27,7 @@
     "zenn-cli": "^0.5.15"
   },
   "devDependencies": {
-    "@textlint/config-loader": "15.8.0",
+    "@textlint/config-loader": "16.1.1",
     "markdownlint-cli2": "0.24.1",
     "prettier": "^3.10.1",
     "textlint": "15.8.0",
