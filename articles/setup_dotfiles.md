@@ -3,7 +3,7 @@ title: 'PC移行を楽にする！dotfilesで開発環境を管理しよう。'
 emoji: '📁'
 type: 'tech'
 topics: ['dotfiles', 'Mac', 'zsh', 'Git', 'Homebrew']
-published: false
+published: true
 ---
 
 ## はじめに

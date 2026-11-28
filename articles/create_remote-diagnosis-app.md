@@ -3,7 +3,7 @@ title: 'React・Next.js・TypeScriptのキャッチアップのために、荒�
 emoji: '🏠'
 type: 'tech' # tech: 技術記事 / idea: アイデア
 topics: ['react', 'nextjs', 'typescript', 'contest2025ts']
-published: false
+published: true
 ---
 
 # 始めに

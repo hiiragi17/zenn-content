@@ -3,7 +3,7 @@ title: "自分ではコードを書かず、Claude Codeに初詣先を診断さ�
 emoji: "⛩️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['ClaudeCode','react', 'nextjs']
-published: false
+published: true
 ---
 
 # 始めに

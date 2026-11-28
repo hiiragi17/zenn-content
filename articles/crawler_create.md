@@ -3,7 +3,7 @@ title: 'pyppeteerを使用してクローラーを作成した話。'
 emoji: '🤖'
 type: 'tech' # tech: 技術記事 / idea: アイデア
 topics: ['Python', 'pyppeteer', 'クローラー']
-published: false
+published: true
 ---
 
 # 始めに
