@@ -3,7 +3,7 @@ title: "Findyさんの抽選に当たったので、「O'Reilly 学び放題プ�
 emoji: "📕"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ['ポエム', 'oreilly', '技術書', '読書']
-published: false
+published: true
 ---
 # 始めに
 

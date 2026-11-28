@@ -3,7 +3,7 @@ title: " Astro × TypeScript × GitHub Pagesで1日1スクラップサイトを�
 emoji: "📃"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['astro', 'typescript', 'GitHubPages']
-published: false
+published: true
 ---
 # 始めに
 

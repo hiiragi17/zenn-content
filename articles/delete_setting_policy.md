@@ -3,7 +3,7 @@ title: "複雑な削除制限をLaravelのPolicyで統一管理する。"
 emoji: "🛍️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [ 'laravel', 'policy']
-published: false
+published: true
 ---
 
 # 始めに
